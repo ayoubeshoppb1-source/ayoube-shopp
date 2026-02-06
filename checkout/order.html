@@ -3,202 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد البيانات | AYOUBE SHOP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>تأكيد الطلب | AYOUBE SHOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --primary: #4f46e5; 
-            --bg: #f8fafc; 
-            --white: #ffffff; 
-            --border: #e2e8f0; 
-            --text: #1e293b;
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
         }
 
-        body { 
-            background: var(--bg); 
-            font-family: 'Cairo', sans-serif; 
-            margin: 0; 
-            padding: 20px; 
+        body {
+            background-color: var(--bg);
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            color: var(--text-main);
         }
 
-        .container { 
-            width: 100%;
-            max-width: 450px; 
+        .container { width: 95%; max-width: 440px; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
         }
 
-        header { 
-            text-align: center; 
-            margin-bottom: 30px; 
-            font-weight: 900; 
-            font-size: 1.8rem; 
-            color: var(--primary); 
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
         }
 
-        .card { 
-            background: var(--white); 
-            border-radius: 24px; 
-            padding: 30px; 
-            border: 1px solid var(--border); 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+        h1 {
+            font-weight: 900;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        h3 { 
-            font-size: 1.1rem; 
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h3 span {
-            background: var(--primary);
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
+        .input-group { margin-bottom: 25px; }
 
         label {
             display: block;
             font-weight: 700;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            color: #64748b;
-        }
-
-        input { 
-            width: 100%; 
-            padding: 18px; 
-            border: 2px solid var(--border); 
-            border-radius: 15px; 
-            font-size: 1.2rem; 
-            box-sizing: border-box; 
-            outline: none; 
-            background: #f8fafc;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            color: var(--text-main);
             text-align: center;
-            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            font-size: 1.2rem;
+            box-sizing: border-box;
+            outline: none;
+            background: #fdfdfd;
+            text-align: center;
+            font-weight: 800;
             transition: 0.3s;
         }
 
-        input:focus { 
-            border-color: var(--primary); 
-            background: #fff;
-        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.1); }
 
-        .btn-confirm { 
-            width: 100%; 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            padding: 20px; 
-            border-radius: 16px; 
-            font-size: 1.2rem; 
-            font-weight: 900; 
-            cursor: pointer; 
+        .upload-card {
+            border: 2px dashed var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8fafc;
             transition: 0.3s;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-confirm:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
+        .upload-card:hover { border-color: var(--primary); background: #f5f7ff; }
+
+        #uploadPlaceholder svg { width: 50px; height: 50px; color: var(--primary); margin-bottom: 10px; }
+
+        #imgPreview { width: 100%; max-height: 300px; object-fit: contain; border-radius: 15px; display: none; }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 22px;
+            border-radius: 20px;
+            font-size: 1.25rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+            margin-top: 20px;
         }
 
-        .back-link { 
-            display: block; 
-            text-align: center; 
-            margin-top: 25px; 
-            color: #94a3b8; 
-            text-decoration: none; 
-            font-size: 0.9rem; 
-        }
+        .btn-submit:disabled { background: #cbd5e1; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>AYOUBE SHOP</header>
     <div class="card">
-        <h3><span>3</span> معلومات الشحن</h3>
+        <h1>AYOUBE SHOP</h1>
         
         <div class="input-group">
-            <label>معرف اللاعب (ID)</label>
-            <input type="number" id="pID" placeholder="00000000" oninput="limitDigits(this, 12)">
+            <label>معرف اللاعب (Player ID)</label>
+            <input type="number" id="pID" placeholder="ID اللاعب" 
+                   oninput="if(this.value.length > 15) this.value = this.value.slice(0, 15)">
         </div>
 
         <div class="input-group">
-            <label>كود التعبئة (*9)</label>
-            <input type="number" id="pCode" placeholder="14 رقم" oninput="limitDigits(this, 14)">
+            <label>صورة بطاقة التعبئة (*9)</label>
+            <div class="upload-card" onclick="document.getElementById('fileInput').click()">
+                <div id="uploadPlaceholder">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                    <span style="display:block; font-weight:700; color:#64748b;">📸 اضغط لتصوير الورقة</span>
+                </div>
+                <img id="imgPreview">
+                <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage(this)">
+            </div>
         </div>
 
-        <button class="btn-confirm" id="submitBtn" onclick="sendToSheet()">إتمام الطلب</button>
-        <a href="../index.html" class="back-link">← العودة لتعديل الطلب</a>
+        <button class="btn-submit" id="submitBtn" onclick="submitOrder()">إرسال الطلب</button>
     </div>
 </div>
 
 <script>
-    // تحديد عدد الأرقام
-    function limitDigits(el, max) {
-        if (el.value.length > max) el.value = el.value.slice(0, max);
+    let imageData = "";
+    const params = new URLSearchParams(window.location.search);
+
+    function previewImage(input) {
+        if (input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('imgPreview').src = e.target.result;
+                document.getElementById('imgPreview').style.display = 'block';
+                document.getElementById('uploadPlaceholder').style.display = 'none';
+                imageData = e.target.result.split(',')[1];
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
-    // جلب بيانات الباقة من الرابط
-    const params = new URLSearchParams(window.location.search);
-    const pkg = params.get('pkg');
-    const prc = params.get('price');
-    const net = params.get('net');
-
-    function sendToSheet() {
+    async function submitOrder() {
         const id = document.getElementById('pID').value;
-        const code = document.getElementById('pCode').value;
         const btn = document.getElementById('submitBtn');
 
-        if(!id || code.length < 14) {
-            alert("يرجى إدخال ID وكود تعبئة صحيح (14 رقم)");
-            return;
-        }
+        if (!id || !imageData) return alert("يرجى إدخال الـ ID وتصوير الورقة");
 
         btn.disabled = true;
-        btn.innerText = "جاري الإرسال...";
+        btn.innerText = "جاري رفع الصورة...";
 
-        // الرابط الخاص بك
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyVo2joZIzv5DY5RSYwpiE1x40XmEzrK0Q7YMwZDgVirvOq35MetZV2HL5FHEUghjA/exec';
+        try {
+            // 1. ImgBB Upload
+            const imgbbRes = await fetch("https://api.imgbb.com/1/upload?key=71c67697486f03025287f711204652c7", {
+                method: "POST",
+                body: Object.assign(new FormData(), { image: imageData })
+            });
+            const imgData = await imgbbRes.json();
+            const finalUrl = imgData.data.url;
 
-        const data = {
-            id: id,
-            pkg: pkg,
-            price: prc,
-            net: net,
-            code: code
-        };
+            // 2. Google Sheets Upload (الرابط ديالك)
+            btn.innerText = "جاري إرسال الطلب...";
+            const scriptURL = "https://script.google.com/macros/s/AKfycbwcTpxk11FnehDBCw-AmGXsMowdoXtPYCrHJ4nWDNTQ3Dc00YeUp88IUt7qCz3ALn42/exec";
 
-        // إرسال البيانات
-        fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors', // لتجنب مشاكل المتصفح مع جوجل
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        })
-        .then(() => {
-            alert("✅ تم استلام طلبك بنجاح! سيتم الشحن خلال دقائق.");
-            window.location.href = "../index.html"; 
-        })
-        .catch(error => {
-            alert("حدث خطأ في الإرسال، حاول مرة أخرى.");
+            await fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    id: id,
+                    pkg: params.get('pkg'),
+                    price: params.get('price'),
+                    net: params.get('net'),
+                    image: finalUrl
+                })
+            });
+
+            alert("✅ تم إرسال طلبك بنجاح!");
+            window.location.href = "../index.html";
+
+        } catch (err) {
+            alert("حدث خطأ في الإرسال");
             btn.disabled = false;
-            btn.innerText = "إتمام الطلب";
-        });
+        }
     }
 </script>
 </body>
