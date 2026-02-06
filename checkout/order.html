@@ -3,111 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYOUBE SHOP | الصفحة الرئيسية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>تأكيد الطلب | AYOUBE SHOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root { --primary: #4f46e5; --bg: #f8fafc; --white: #ffffff; --border: #e2e8f0; }
-        body { background: var(--bg); font-family: 'Cairo', sans-serif; margin: 0; padding: 20px; }
-        .container { max-width: 450px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; font-weight: 900; font-size: 1.8rem; color: var(--primary); }
-        .card { background: var(--white); border-radius: 20px; padding: 25px; border: 1px solid var(--border); margin-bottom: 20px; }
-        h3 { font-size: 1rem; margin-top: 0; color: #1e293b; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .opt { border: 2px solid var(--border); border-radius: 18px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; background: #fff; }
-        .opt.active { border-color: var(--primary); background: #f5f3ff; transform: scale(1.03); }
-        .opt img { width: 60px; height: auto; margin-bottom: 10px; }
-        .opt .qty { display: block; font-weight: 800; font-size: 1.1rem; }
-        .opt .prc { display: block; color: var(--primary); font-weight: 700; }
-        .pay-flex { display: flex; gap: 12px; margin-top: 15px; }
-        .pay-opt { flex: 1; border: 2px solid var(--border); border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; font-weight: 700; background: #fff; }
-        .pay-opt.active { border-color: #10b981; background: #ecfdf5; }
-        .btn-next { width: 100%; background: var(--primary); color: white; border: none; padding: 18px; border-radius: 15px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
-        
-        /* ستايل الـ Toast باش يجي أنيق */
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --border: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container { width: 95%; max-width: 440px; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 35px 25px;
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        h1 {
+            font-weight: 900;
+            font-size: 1.7rem;
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+
+        .input-group { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            outline: none;
+            text-align: center;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        .upload-card {
+            border: 2px dashed var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            background: #fdfdfd;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #imgPreview { width: 100%; max-height: 250px; object-fit: contain; border-radius: 12px; display: none; }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-submit:disabled { background: #cbd5e1; cursor: not-allowed; }
+
         .swal2-toast { border-radius: 15px !important; font-family: 'Cairo' !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>AYOUBE SHOP</header>       
-
     <div class="card">
-        <h3>1. اختر كمية الجواهر</h3>
-        <div class="grid">
-            <div class="opt" onclick="selP(this, '100', '12')">
-                <img src="https://i.ibb.co/9mTtY9xJ/image.png">
-                <span class="qty">100 جوهرة</span>
-                <span class="prc">12 DH</span>
-            </div>
-            <div class="opt" onclick="selP(this, '210', '24')">
-                <img src="https://i.ibb.co/9mTtY9xJ/image.png">
-                <span class="qty">210 جوهرة</span>
-                <span class="prc">24 DH</span>
-            </div>
-            <div class="opt" onclick="selP(this, '530', '50')">
-                <img src="https://i.ibb.co/9mTtY9xJ/image.png">
-                <span class="qty">530 جوهرة</span>
-                <span class="prc">50 DH</span>
-            </div>
-            <div class="opt" onclick="selP(this, '1080', '100')">
-                <img src="https://i.ibb.co/9mTtY9xJ/image.png">
-                <span class="qty">1080 جوهرة</span>
-                <span class="prc">100 DH</span>
+        <h1>AYOUBE SHOP</h1>
+        
+        <div class="input-group">
+            <label>معرف اللاعب (Player ID)</label>
+            <input type="number" id="pID" placeholder="أدخل ID اللاعب">
+        </div>
+
+        <div class="input-group">
+            <label>صورة بطاقة التعبئة (*9)</label>
+            <div class="upload-card" onclick="document.getElementById('fileInput').click()">
+                <div id="uploadPlaceholder">
+                    <svg width="45" height="45" fill="none" stroke="#4f46e5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                    <span style="display:block; font-weight:700; color:#64748b; margin-top:10px;">📸 اضغط لتصوير البطاقة</span>
+                </div>
+                <img id="imgPreview">
+                <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage(this)">
             </div>
         </div>
-    </div>
 
-    <div class="card">
-        <h3>2. وسيلة الدفع</h3>
-        <div class="pay-flex">
-            <div class="pay-opt" onclick="selN(this, 'Orange')">Orange (*9)</div>
-            <div class="pay-opt" onclick="selN(this, 'Inwi')">Inwi (*9)</div>
-        </div>
+        <button class="btn-submit" id="submitBtn" onclick="submitOrder()">إرسال الطلب الآن</button>
     </div>
-
-    <button class="btn-next" onclick="go()">متابعة الطلب</button>
 </div>
 
 <script>
-    let p="", pr="", n="";
+    let imageData = "";
+    const params = new URLSearchParams(window.location.search);
 
-    // دالة الـ Toast الموحدة
     const notify = (msg, iconType) => {
         Swal.fire({
             toast: true,
             position: 'top',
             showConfirmButton: false,
-            timer: 3000,
-            icon: iconType,
+            timer: (iconType === 'loading') ? null : 3000,
+            icon: (iconType === 'loading') ? 'info' : iconType,
             title: msg,
-            timerProgressBar: true
+            timerProgressBar: (iconType !== 'loading'),
+            didOpen: () => { if(iconType === 'loading') Swal.showLoading(); }
         });
     };
 
-    function selP(el, pkg, price) {
-        document.querySelectorAll('.opt').forEach(o => o.classList.remove('active'));
-        el.classList.add('active'); p=pkg; pr=price;
+    function previewImage(input) {
+        if (input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('imgPreview').src = e.target.result;
+                document.getElementById('imgPreview').style.display = 'block';
+                document.getElementById('uploadPlaceholder').style.display = 'none';
+                imageData = e.target.result.split(',')[1];
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
-    function selN(el, net) {
-        document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('active'));
-        el.classList.add('active'); n=net;
-    }
-    
-    function go() {
-        if(!p || !n) {
-            // إظهار Toast في حالة الخطأ
-            notify("المرجو اختيار الباقة والشبكة أولاً", "error");
+
+    async function submitOrder() {
+        const id = document.getElementById('pID').value;
+        const btn = document.getElementById('submitBtn');
+
+        if (!id || !imageData) {
+            notify("يرجى إدخال ID وتصوير البطاقة", "error");
             return;
         }
-        
-        // إظهار Toast "جاري الانتقال" قبل التحويل
-        notify("جاري توجيهك لصفحة الدفع...", "success");
-        
-        setTimeout(() => {
-            window.location.href = `checkout/order.html?pkg=${p}&price=${pr}&net=${n}`;
-        }, 1200);
+
+        btn.disabled = true;
+        btn.innerText = "جاري الإرسال...";
+        notify("جاري معالجة طلبك الآن...", "loading");
+
+        try {
+            const formData = new FormData();
+            formData.append("image", imageData);
+            const imgRes = await fetch("https://api.imgbb.com/1/upload?key=A33898f2e58d711623402664516c6c3c", {
+                method: "POST",
+                body: formData
+            });
+            const imgData = await imgRes.json();
+
+            if (!imgData.success) throw new Error();
+
+            await fetch("https://script.google.com/macros/s/AKfycbwcTpxk11FnehDBCw-AmGXsMowdoXtPYCrHJ4nWDNTQ3Dc00YeUp88IUt7qCz3ALn42/exec", {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    id: id,
+                    pkg: params.get('pkg'),
+                    price: params.get('price'),
+                    net: params.get('net'),
+                    image: imgData.data.url
+                })
+            });
+
+            notify("تم إرسال طلبك بنجاح ✅", "success");
+
+            setTimeout(() => {
+                window.location.href = "../index.html";
+            }, 2500);
+
+        } catch (e) {
+            Swal.close();
+            notify("وقع خطأ، حاول مرة أخرى", "error");
+            btn.disabled = false;
+            btn.innerText = "إرسال الطلب الآن";
+        }
     }
 </script>
 </body>
