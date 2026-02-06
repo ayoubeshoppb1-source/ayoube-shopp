@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYOUBE SHOP | الصفحة الرئيسية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #4f46e5; --bg: #f8fafc; --white: #ffffff; --border: #e2e8f0; }
+        body { background: var(--bg); font-family: 'Cairo', sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 450px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; font-weight: 900; font-size: 1.8rem; color: var(--primary); }
+        .card { background: var(--white); border-radius: 20px; padding: 25px; border: 1px solid var(--border); margin-bottom: 20px; }
+        h3 { font-size: 1rem; margin-top: 0; color: #1e293b; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .opt { border: 2px solid var(--border); border-radius: 18px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; background: #fff; }
+        .opt.active { border-color: var(--primary); background: #f5f3ff; transform: scale(1.03); }
+        .opt img { width: 60px; height: auto; margin-bottom: 10px; }
+        .opt .qty { display: block; font-weight: 800; font-size: 1.1rem; }
+        .opt .prc { display: block; color: var(--primary); font-weight: 700; }
+        .pay-flex { display: flex; gap: 12px; margin-top: 15px; }
+        .pay-opt { flex: 1; border: 2px solid var(--border); border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; font-weight: 700; background: #fff; }
+        .pay-opt.active { border-color: #10b981; background: #ecfdf5; }
+        .btn-next { width: 100%; background: var(--primary); color: white; border: none; padding: 18px; border-radius: 15px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>AYOUBE SHOP</header>
+
+    <div class="card">
+        <h3>1. اختر كمية الجواهر</h3>
+        <div class="grid">
+            <div class="opt" onclick="selP(this, '100', '12')">
+                <img src="https://i.ibb.co/9mTtY9xJ/image.png">
+                <span class="qty">100 جوهرة</span>
+                <span class="prc">12 DH</span>
+            </div>
+            <div class="opt" onclick="selP(this, '210', '24')">
+                <img src="https://i.ibb.co/9mTtY9xJ/image.png">
+                <span class="qty">210 جوهرة</span>
+                <span class="prc">24 DH</span>
+            </div>
+            <div class="opt" onclick="selP(this, '530', '50')">
+                <img src="https://i.ibb.co/9mTtY9xJ/image.png">
+                <span class="qty">530 جوهرة</span>
+                <span class="prc">50 DH</span>
+            </div>
+            <div class="opt" onclick="selP(this, '1080', '100')">
+                <img src="https://i.ibb.co/9mTtY9xJ/image.png">
+                <span class="qty">1080 جوهرة</span>
+                <span class="prc">100 DH</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>2. وسيلة الدفع</h3>
+        <div class="pay-flex">
+            <div class="pay-opt" onclick="selN(this, 'Orange')">Orange (*9)</div>
+            <div class="pay-opt" onclick="selN(this, 'Inwi')">Inwi (*9)</div>
+        </div>
+    </div>
+
+    <button class="btn-next" onclick="go()">متابعة الطلب</button>
+</div>
+
+<script>
+    let p="", pr="", n="";
+    function selP(el, pkg, price) {
+        document.querySelectorAll('.opt').forEach(o => o.classList.remove('active'));
+        el.classList.add('active'); p=pkg; pr=price;
+    }
+    function selN(el, net) {
+        document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('active'));
+        el.classList.add('active'); n=net;
+    }
+    function go() {
+        if(!p || !n) return alert("المرجو اختيار الباقة والشبكة أولاً");
+        // هنا نقوم بإرسال المعلومات في الرابط
+        window.location.href = `checkout/order.html?pkg=${p}&price=${pr}&net=${n}`;
+    }
+</script>
+</body>
+</html>
