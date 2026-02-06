@@ -3,31 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYOUBE SHOP | الصفحة الرئيسية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>AYOUBE SHOP | متجر الشحن السريع</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root { --primary: #4f46e5; --bg: #f8fafc; --white: #ffffff; --border: #e2e8f0; }
-        body { background: var(--bg); font-family: 'Cairo', sans-serif; margin: 0; padding: 20px; }
+        :root { 
+            --primary: #6366f1; 
+            --primary-dark: #4f46e5;
+            --accent: #10b981;
+            --bg: #f8fafc; 
+            --card-bg: #ffffff; 
+            --border: #e2e8f0; 
+        }
+        
+        body { 
+            background: var(--bg); 
+            font-family: 'Cairo', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            color: #1e293b;
+        }
+
         .container { max-width: 450px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; font-weight: 900; font-size: 1.8rem; color: var(--primary); }
-        .card { background: var(--white); border-radius: 20px; padding: 25px; border: 1px solid var(--border); margin-bottom: 20px; }
-        h3 { font-size: 1rem; margin-top: 0; color: #1e293b; }
+
+        header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            font-weight: 900; 
+            font-size: 2.2rem; 
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 25px; 
+            padding: 25px; 
+            border: 1px solid var(--border); 
+            margin-bottom: 20px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        h3 { 
+            font-size: 1.1rem; 
+            margin-top: 0; 
+            margin-bottom: 20px;
+            color: #64748b; 
+            font-weight: 700;
+        }
+
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .opt { border: 2px solid var(--border); border-radius: 18px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; background: #fff; }
-        .opt.active { border-color: var(--primary); background: #f5f3ff; transform: scale(1.03); }
-        .opt img { width: 60px; height: auto; margin-bottom: 10px; }
-        .opt .qty { display: block; font-weight: 800; font-size: 1.1rem; }
-        .opt .prc { display: block; color: var(--primary); font-weight: 700; }
-        .pay-flex { display: flex; gap: 12px; margin-top: 15px; }
-        .pay-opt { flex: 1; border: 2px solid var(--border); border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; font-weight: 700; background: #fff; }
-        .pay-opt.active { border-color: #10b981; background: #ecfdf5; }
-        .btn-next { width: 100%; background: var(--primary); color: white; border: none; padding: 18px; border-radius: 15px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+
+        /* ستايل باقات الجواهر */
+        .opt { 
+            border: 2px solid var(--border); 
+            border-radius: 22px; 
+            padding: 20px 10px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            background: #fff;
+            position: relative;
+        }
+
+        .opt:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .opt.active { 
+            border-color: var(--primary); 
+            background: #f5f3ff; 
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.2);
+        }
+
+        .opt img { width: 55px; height: auto; margin-bottom: 12px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
+        
+        .opt .qty { display: block; font-weight: 800; font-size: 1.1rem; margin-bottom: 5px; }
+        
+        .opt .prc { 
+            display: inline-block; 
+            background: var(--primary); 
+            color: white; 
+            padding: 2px 12px; 
+            border-radius: 10px; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+        }
+
+        /* ستايل وسيلة الدفع */
+        .pay-flex { display: flex; gap: 12px; }
+        
+        .pay-opt { 
+            flex: 1; 
+            border: 2px solid var(--border); 
+            border-radius: 18px; 
+            padding: 15px; 
+            text-align: center; 
+            cursor: pointer; 
+            font-weight: 800; 
+            background: #fff; 
+            transition: 0.3s;
+        }
+
+        .pay-opt:hover { background: #f8fafc; }
+
+        .pay-opt.active { 
+            border-color: var(--accent); 
+            background: #ecfdf5; 
+            color: var(--accent);
+            box-shadow: 0 8px 15px -5px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-next { 
+            width: 100%; 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+            color: white; 
+            border: none; 
+            padding: 20px; 
+            border-radius: 20px; 
+            font-size: 1.2rem; 
+            font-weight: 900; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn-next:active { transform: scale(0.98); }
+
+        .swal2-popup { border-radius: 25px !important; font-family: 'Cairo' !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>AYOUBE SHOP</header>
+    <header>AYOUBE SHOP</header>       
 
     <div class="card">
         <h3>1. اختر كمية الجواهر</h3>
@@ -68,18 +177,42 @@
 
 <script>
     let p="", pr="", n="";
+
     function selP(el, pkg, price) {
         document.querySelectorAll('.opt').forEach(o => o.classList.remove('active'));
-        el.classList.add('active'); p=pkg; pr=price;
+        el.classList.add('active'); 
+        p=pkg; pr=price;
     }
+
     function selN(el, net) {
         document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('active'));
-        el.classList.add('active'); n=net;
+        el.classList.add('active'); 
+        n=net;
     }
+
     function go() {
-        if(!p || !n) return alert("المرجو اختيار الباقة والشبكة أولاً");
-        // هنا نقوم بإرسال المعلومات في الرابط
-        window.location.href = `checkout/order.html?pkg=${p}&price=${pr}&net=${n}`;
+        if(!p || !n) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'اختيار ناقص',
+                text: 'المرجو اختيار الباقة والشبكة أولاً لتتمكن من المتابعة',
+                confirmButtonColor: '#6366f1',
+                confirmButtonText: 'فهمت'
+            });
+            return;
+        }
+        
+        // تحويل أنيق للصفحة القادمة
+        let timerInterval;
+        Swal.fire({
+            title: 'جاري التحضير...',
+            timer: 800,
+            timerProgressBar: true,
+            didOpen: () => { Swal.showLoading(); },
+            willClose: () => { clearInterval(timerInterval); }
+        }).then(() => {
+            window.location.href = `checkout/order.html?pkg=${p}&price=${pr}&net=${n}`;
+        });
     }
 </script>
 </body>
