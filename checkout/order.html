@@ -79,10 +79,7 @@
             background: #fdfdfd;
             text-align: center;
             font-weight: 800;
-            transition: 0.3s;
         }
-
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.1); }
 
         .upload-card {
             border: 2px dashed var(--border);
@@ -99,8 +96,6 @@
             justify-content: center;
         }
 
-        .upload-card:hover { border-color: var(--primary); background: #f5f7ff; }
-
         #uploadPlaceholder svg { width: 50px; height: 50px; color: var(--primary); margin-bottom: 10px; }
 
         #imgPreview { width: 100%; max-height: 300px; object-fit: contain; border-radius: 15px; display: none; }
@@ -115,7 +110,6 @@
             font-size: 1.25rem;
             font-weight: 900;
             cursor: pointer;
-            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
             margin-top: 20px;
         }
 
@@ -130,8 +124,7 @@
         
         <div class="input-group">
             <label>معرف اللاعب (Player ID)</label>
-            <input type="number" id="pID" placeholder="ID اللاعب" 
-                   oninput="if(this.value.length > 15) this.value = this.value.slice(0, 15)">
+            <input type="number" id="pID" placeholder="ID اللاعب" oninput="if(this.value.length > 15) this.value = this.value.slice(0, 15)">
         </div>
 
         <div class="input-group">
@@ -161,6 +154,7 @@
                 document.getElementById('imgPreview').src = e.target.result;
                 document.getElementById('imgPreview').style.display = 'block';
                 document.getElementById('uploadPlaceholder').style.display = 'none';
+                // نحتفظ فقط بـ Base64
                 imageData = e.target.result.split(',')[1];
             };
             reader.readAsDataURL(input.files[0]);
@@ -171,42 +165,55 @@
         const id = document.getElementById('pID').value;
         const btn = document.getElementById('submitBtn');
 
-        if (!id || !imageData) return alert("يرجى إدخال الـ ID وتصوير الورقة");
+        if (!id || !imageData) return alert("يرجى إدخال ID وتصوير الورقة");
 
         btn.disabled = true;
         btn.innerText = "جاري رفع الصورة...";
 
+        // إعداد البيانات لـ ImgBB
+        const formData = new FormData();
+        formData.append("image", imageData);
+
         try {
-            // 1. ImgBB Upload
-            const imgbbRes = await fetch("https://api.imgbb.com/1/upload?key=71c67697486f03025287f711204652c7", {
+            // 1. الرفع لـ ImgBB باستخدام API Key الجديد ديالك
+            const imgbbRes = await fetch("https://api.imgbb.com/1/upload?key=A33898f2e58d711623402664516c6c3c", {
                 method: "POST",
-                body: Object.assign(new FormData(), { image: imageData })
+                body: formData
             });
+            
             const imgData = await imgbbRes.json();
-            const finalUrl = imgData.data.url;
+            
+            if (imgData.success) {
+                const finalUrl = imgData.data.url;
+                btn.innerText = "جاري إرسال الطلب...";
 
-            // 2. Google Sheets Upload (الرابط ديالك)
-            btn.innerText = "جاري إرسال الطلب...";
-            const scriptURL = "https://script.google.com/macros/s/AKfycbwcTpxk11FnehDBCw-AmGXsMowdoXtPYCrHJ4nWDNTQ3Dc00YeUp88IUt7qCz3ALn42/exec";
+                // 2. الإرسال لـ Google Sheets
+                const scriptURL = "https://script.google.com/macros/s/AKfycbwcTpxk11FnehDBCw-AmGXsMowdoXtPYCrHJ4nWDNTQ3Dc00YeUp88IUt7qCz3ALn42/exec";
 
-            await fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({
-                    id: id,
-                    pkg: params.get('pkg'),
-                    price: params.get('price'),
-                    net: params.get('net'),
-                    image: finalUrl
-                })
-            });
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({
+                        id: id,
+                        pkg: params.get('pkg'),
+                        price: params.get('price'),
+                        net: params.get('net'),
+                        image: finalUrl
+                    })
+                });
 
-            alert("✅ تم إرسال طلبك بنجاح!");
-            window.location.href = "../index.html";
+                alert("✅ تم إرسال طلبك بنجاح!");
+                window.location.href = "../index.html";
+            } else {
+                alert("خطأ في رفع الصورة، حاول مرة أخرى.");
+                btn.disabled = false;
+                btn.innerText = "إرسال الطلب";
+            }
 
         } catch (err) {
-            alert("حدث خطأ في الإرسال");
+            alert("وقع خطأ، تأكد من الإنترنت.");
             btn.disabled = false;
+            btn.innerText = "إرسال الطلب";
         }
     }
 </script>
