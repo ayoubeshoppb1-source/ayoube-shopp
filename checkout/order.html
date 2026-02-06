@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد البيانات | AYOUBE SHOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #4f46e5; 
+            --bg: #f8fafc; 
+            --white: #ffffff; 
+            --border: #e2e8f0; 
+            --text: #1e293b;
+        }
+
+        body { 
+            background: var(--bg); 
+            font-family: 'Cairo', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container { 
+            width: 100%;
+            max-width: 450px; 
+        }
+
+        header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            font-weight: 900; 
+            font-size: 1.8rem; 
+            color: var(--primary); 
+        }
+
+        .card { 
+            background: var(--white); 
+            border-radius: 24px; 
+            padding: 30px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+        }
+
+        h3 { 
+            font-size: 1.1rem; 
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 span {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: #64748b;
+        }
+
+        input { 
+            width: 100%; 
+            padding: 18px; 
+            border: 2px solid var(--border); 
+            border-radius: 15px; 
+            font-size: 1.2rem; 
+            box-sizing: border-box; 
+            outline: none; 
+            background: #f8fafc;
+            text-align: center;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        input:focus { 
+            border-color: var(--primary); 
+            background: #fff;
+        }
+
+        .btn-confirm { 
+            width: 100%; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 20px; 
+            border-radius: 16px; 
+            font-size: 1.2rem; 
+            font-weight: 900; 
+            cursor: pointer; 
+            transition: 0.3s;
+        }
+
+        .btn-confirm:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .back-link { 
+            display: block; 
+            text-align: center; 
+            margin-top: 25px; 
+            color: #94a3b8; 
+            text-decoration: none; 
+            font-size: 0.9rem; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>AYOUBE SHOP</header>
+    <div class="card">
+        <h3><span>3</span> معلومات الشحن</h3>
+        
+        <div class="input-group">
+            <label>معرف اللاعب (ID)</label>
+            <input type="number" id="pID" placeholder="00000000" oninput="limitDigits(this, 12)">
+        </div>
+
+        <div class="input-group">
+            <label>كود التعبئة (*9)</label>
+            <input type="number" id="pCode" placeholder="14 رقم" oninput="limitDigits(this, 14)">
+        </div>
+
+        <button class="btn-confirm" id="submitBtn" onclick="sendToSheet()">إتمام الطلب</button>
+        <a href="../index.html" class="back-link">← العودة لتعديل الطلب</a>
+    </div>
+</div>
+
+<script>
+    // تحديد عدد الأرقام
+    function limitDigits(el, max) {
+        if (el.value.length > max) el.value = el.value.slice(0, max);
+    }
+
+    // جلب بيانات الباقة من الرابط
+    const params = new URLSearchParams(window.location.search);
+    const pkg = params.get('pkg');
+    const prc = params.get('price');
+    const net = params.get('net');
+
+    function sendToSheet() {
+        const id = document.getElementById('pID').value;
+        const code = document.getElementById('pCode').value;
+        const btn = document.getElementById('submitBtn');
+
+        if(!id || code.length < 14) {
+            alert("يرجى إدخال ID وكود تعبئة صحيح (14 رقم)");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = "جاري الإرسال...";
+
+        // الرابط الخاص بك
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyVo2joZIzv5DY5RSYwpiE1x40XmEzrK0Q7YMwZDgVirvOq35MetZV2HL5FHEUghjA/exec';
+
+        const data = {
+            id: id,
+            pkg: pkg,
+            price: prc,
+            net: net,
+            code: code
+        };
+
+        // إرسال البيانات
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors', // لتجنب مشاكل المتصفح مع جوجل
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            alert("✅ تم استلام طلبك بنجاح! سيتم الشحن خلال دقائق.");
+            window.location.href = "../index.html"; 
+        })
+        .catch(error => {
+            alert("حدث خطأ في الإرسال، حاول مرة أخرى.");
+            btn.disabled = false;
+            btn.innerText = "إتمام الطلب";
+        });
+    }
+</script>
+</body>
+</html>
