@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تأكيد الطلب | AYOUBE SHOP</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --primary: #6366f1;
@@ -13,7 +14,6 @@
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #0f172a;
-            --text-muted: #64748b;
             --border: #e2e8f0;
         }
 
@@ -25,7 +25,6 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: var(--text-main);
         }
 
         .container { width: 95%; max-width: 440px; }
@@ -64,7 +63,6 @@
             font-weight: 700;
             font-size: 0.9rem;
             margin-bottom: 12px;
-            color: var(--text-main);
             text-align: center;
         }
 
@@ -76,7 +74,6 @@
             font-size: 1.2rem;
             box-sizing: border-box;
             outline: none;
-            background: #fdfdfd;
             text-align: center;
             font-weight: 800;
         }
@@ -88,15 +85,12 @@
             text-align: center;
             cursor: pointer;
             background: #f8fafc;
-            transition: 0.3s;
             min-height: 150px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
-
-        #uploadPlaceholder svg { width: 50px; height: 50px; color: var(--primary); margin-bottom: 10px; }
 
         #imgPreview { width: 100%; max-height: 300px; object-fit: contain; border-radius: 15px; display: none; }
 
@@ -114,6 +108,9 @@
         }
 
         .btn-submit:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+        /* ستايل التنبيهات Toast باش تكون أنيقة */
+        .swal2-toast { border-radius: 15px !important; font-family: 'Cairo' !important; }
     </style>
 </head>
 <body>
@@ -131,8 +128,8 @@
             <label>صورة بطاقة التعبئة (*9)</label>
             <div class="upload-card" onclick="document.getElementById('fileInput').click()">
                 <div id="uploadPlaceholder">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-                    <span style="display:block; font-weight:700; color:#64748b;">📸 اضغط لتصوير الورقة</span>
+                    <svg width="50" height="50" fill="none" stroke="#6366f1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                    <span style="display:block; font-weight:700; color:#64748b; margin-top:10px;">📸 اضغط لتصوير الورقة</span>
                 </div>
                 <img id="imgPreview">
                 <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage(this)">
@@ -147,6 +144,19 @@
     let imageData = "";
     const params = new URLSearchParams(window.location.search);
 
+    // دالة Toast موحدة لجميع الحالات
+    const notify = (msg, iconType) => {
+        Swal.fire({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: (iconType === 'info') ? null : 3000, // الـ Loader مابغيتوش يطفا بوحدو
+            icon: iconType,
+            title: msg,
+            timerProgressBar: (iconType !== 'info')
+        });
+    };
+
     function previewImage(input) {
         if (input.files[0]) {
             const reader = new FileReader();
@@ -154,7 +164,6 @@
                 document.getElementById('imgPreview').src = e.target.result;
                 document.getElementById('imgPreview').style.display = 'block';
                 document.getElementById('uploadPlaceholder').style.display = 'none';
-                // نحتفظ فقط بـ Base64
                 imageData = e.target.result.split(',')[1];
             };
             reader.readAsDataURL(input.files[0]);
@@ -165,53 +174,52 @@
         const id = document.getElementById('pID').value;
         const btn = document.getElementById('submitBtn');
 
-        if (!id || !imageData) return alert("يرجى إدخال ID وتصوير الورقة");
+        if (!id || !imageData) {
+            notify("يرجى إدخال ID وتصوير الورقة", "error");
+            return;
+        }
 
         btn.disabled = true;
-        btn.innerText = "جاري رفع الصورة...";
+        btn.innerText = "انتظر...";
 
-        // إعداد البيانات لـ ImgBB
-        const formData = new FormData();
-        formData.append("image", imageData);
+        // إظهار Toast "جاري المعالجة" نيشان بلا ما يحبس المستخدم
+        notify("جاري معالجة طلبك...", "info");
+        Swal.showLoading(); 
 
         try {
-            // 1. الرفع لـ ImgBB باستخدام API Key الجديد ديالك
-            const imgbbRes = await fetch("https://api.imgbb.com/1/upload?key=A33898f2e58d711623402664516c6c3c", {
+            // 1. ImgBB
+            const formData = new FormData();
+            formData.append("image", imageData);
+            const imgRes = await fetch("https://api.imgbb.com/1/upload?key=A33898f2e58d711623402664516c6c3c", {
                 method: "POST",
                 body: formData
             });
-            
-            const imgData = await imgbbRes.json();
-            
-            if (imgData.success) {
-                const finalUrl = imgData.data.url;
-                btn.innerText = "جاري إرسال الطلب...";
+            const imgData = await imgRes.json();
 
-                // 2. الإرسال لـ Google Sheets
-                const scriptURL = "https://script.google.com/macros/s/AKfycbwcTpxk11FnehDBCw-AmGXsMowdoXtPYCrHJ4nWDNTQ3Dc00YeUp88IUt7qCz3ALn42/exec";
+            if (!imgData.success) throw new Error();
 
-                await fetch(scriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({
-                        id: id,
-                        pkg: params.get('pkg'),
-                        price: params.get('price'),
-                        net: params.get('net'),
-                        image: finalUrl
-                    })
-                });
+            // 2. Google Sheets
+            await fetch("https://script.google.com/macros/s/AKfycbwcTpxk11FnehDBCw-AmGXsMowdoXtPYCrHJ4nWDNTQ3Dc00YeUp88IUt7qCz3ALn42/exec", {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    id: id,
+                    pkg: params.get('pkg'),
+                    price: params.get('price'),
+                    net: params.get('net'),
+                    image: imgData.data.url
+                })
+            });
 
-                alert("✅ تم إرسال طلبك بنجاح!");
+            // ملي يكمل، التنبيه كايتبدل لـ "نجاح" في نفس البلاصة
+            notify("تم إرسال طلبك بنجاح ✅", "success");
+
+            setTimeout(() => {
                 window.location.href = "../index.html";
-            } else {
-                alert("خطأ في رفع الصورة، حاول مرة أخرى.");
-                btn.disabled = false;
-                btn.innerText = "إرسال الطلب";
-            }
+            }, 2500);
 
-        } catch (err) {
-            alert("وقع خطأ، تأكد من الإنترنت.");
+        } catch (e) {
+            notify("حدث خطأ، حاول مجدداً", "error");
             btn.disabled = false;
             btn.innerText = "إرسال الطلب";
         }
